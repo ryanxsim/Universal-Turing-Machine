@@ -4,16 +4,15 @@ import models.Transition;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class TuringMachine {
     private State currentState;
-    private final Map<State, List<Transition>> transitions;
+    private final Map<State, List<Transition>> states;
     private final Tape tape;
 
-    public TuringMachine(List<Transition> transitions, String tapeInput) {
-        for (Transition transition : transitions) {
+    public TuringMachine(List<Transition> states, String tapeInput) {
+        for (Transition transition : states) {
             if (transition.from().isStart()) {
                 currentState = transition.from();
                 break;
@@ -23,7 +22,7 @@ public class TuringMachine {
             throw new IllegalArgumentException("Turing machine has no start state.");
         }
 
-        this.transitions = transitions.stream().collect(Collectors.groupingBy(Transition::from));
+        this.states = states.stream().collect(Collectors.groupingBy(Transition::from));
 
         this.tape = new Tape(tapeInput);
     }
@@ -35,7 +34,7 @@ public class TuringMachine {
                 System.out.println("Accepting state reached.");
                 break;
             }
-            List<Transition> transitions = this.transitions.get(currentState);
+            List<Transition> transitions = states.get(currentState);
             if (transitions == null) {
                 throw new IllegalArgumentException("No transition found for state " + currentState.getState());
             }

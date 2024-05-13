@@ -26,6 +26,19 @@ import java.util.Scanner;
  * 4. Group the starting states of the transitions
  */
 
+
+/**TODO
+ * InputAlphabet rework
+ * Laufmodus und Stepmodus
+ * Zeigen des aktuellen Zustandes der TM,
+ * a) das korrekte Ergebnis,
+ * b) die Angabe des aktuellen Zustandes der TM,
+ * c) das Band mit mind. 15 Elementen vor und nach dem Lese-/Schreibkopf,
+ * d) die aktuelle Position des Lese-/Schreibkopfes und
+ * e) ein Zähler, der die Anzahl der bisher durchgeführten Berechnungsschritte angibt.
+ * Clean Code rework
+ */
+
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
