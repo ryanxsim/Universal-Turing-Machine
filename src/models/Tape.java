@@ -44,13 +44,28 @@ public class Tape {
     }
 
     public void displayTape() {
-        for (int i = 0; i < tape.size(); i++) {
+        int tapeStart = Math.max(0, currentPosition - 15);
+        int tapeEnd = Math.min(tape.size(), currentPosition + 15);
+
+        // If there are fewer than 15 elements before the current position, fill the remaining spaces with '_'
+        for (int i = currentPosition - 15; i < tapeStart; i++) {
+            System.out.print(" _ ");
+        }
+
+        // Display 15 elements before and after the current position
+        for (int i = tapeStart; i < tapeEnd; i++) {
             if (i == currentPosition) {
                 System.out.print("[" + tape.get(i) + "]");
             } else {
                 System.out.print(" " + tape.get(i) + " ");
             }
         }
+
+        // If there are fewer than 15 elements after the current position, fill the remaining spaces with '_'
+        for (int i = tapeEnd; i < currentPosition + 16; i++) {
+            System.out.print(" _ ");
+        }
+
         System.out.println();
     }
 }

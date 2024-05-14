@@ -7,6 +7,7 @@ import models.Transition;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class TuringMachineBuilder {
     private final static int CURR_STATE_POS = 0;
@@ -19,6 +20,7 @@ public class TuringMachineBuilder {
     private final static String TRANSITION_SEPARATOR = "11";
     private final static String PARAMETER_SEPARATOR = "1";
 
+    private final Scanner scanner = new Scanner(System.in);
     private final String godelNumber;
     private String tapeInput;
     private List<String> transitionsInputs;
@@ -36,7 +38,7 @@ public class TuringMachineBuilder {
                 .map(s -> s.split(PARAMETER_SEPARATOR))
                 .allMatch(params -> params.length == 5);
 
-        if (!valid){
+        if (!valid) {
             throw new IllegalArgumentException("Transitions are invalid (not 5 params for each transition)");
         }
 
@@ -44,21 +46,11 @@ public class TuringMachineBuilder {
         Alphabet tapeAlphabet = buildTapeAlphabet(transitionsInputs);
 
         for (String transitionInput : transitionsInputs) {
-        String[] parts = transitionInput.split(PARAMETER_SEPARATOR);
+            String[] parts = transitionInput.split(PARAMETER_SEPARATOR);
             transitions.add(createTransition(parts, tapeAlphabet));
         }
 
         return new TuringMachine(transitions, tapeInput);
-    }
-
-    private Alphabet buildInputAlphabet(List<String> transitionsInputs) {
-        var inputAlphabet = AlphabetBuilder.buildAlphabet(AlphabetBuilder.Kind.INPUT);
-
-        transitionsInputs.stream().map(s -> s.split(PARAMETER_SEPARATOR))
-                .map(params -> params[INPUT_SYMBOL_POS])
-                .forEach(inputAlphabet::addSymbolFromInput);
-
-        return inputAlphabet;
     }
 
     private Alphabet buildTapeAlphabet(List<String> transitionsInputs) {
@@ -72,15 +64,19 @@ public class TuringMachineBuilder {
     }
 
     private void splitInput() {
-        if (!godelNumber.contains(INPUT_SEPARATOR)) {
-            throw new IllegalArgumentException("Invalid Gödel number: does not contain input word");
+        String[] parts = godelNumber.split(INPUT_SEPARATOR, 2);
+
+        if (parts.length == 2) {
+            tapeInput = parts[1];
         }
 
-        String[] parts = godelNumber.split(INPUT_SEPARATOR, 2);
-        tapeInput = parts[1];
+        if (tapeInput == null || tapeInput.isBlank()) {
+            System.out.println("No Input Word found in Gödel Number, please enter Input Word");
+            tapeInput = scanner.nextLine();
+        }
 
-        // Split transition from the Turing Machine Gödel  number
-        transitionsInputs = Arrays.asList(parts[0].split(TRANSITION_SEPARATOR));
+        // Split transition from the Turing Machine Gödel  number and also remove the 1 at the beginning
+        transitionsInputs = Arrays.asList(parts[0].replaceFirst("^1", "").split(TRANSITION_SEPARATOR));
     }
 
     private State createState(String input) {
@@ -90,7 +86,7 @@ public class TuringMachineBuilder {
     private Transition createTransition(String[] parts, Alphabet tapeAlphabet) {
 
         State currentState = createState(parts[CURR_STATE_POS]);
-        char currentSymbol =  tapeAlphabet.getSymbol(parts[INPUT_SYMBOL_POS]);
+        char currentSymbol = tapeAlphabet.getSymbol(parts[INPUT_SYMBOL_POS]);
         State nextState = createState(parts[NEXT_STATE_POS]);
         char nextSymbol = tapeAlphabet.getSymbol(parts[OUTPUT_SYMBOL_POS]);
         Direction direction = Direction.mapDirection(parts[DIRECTION_POS]);

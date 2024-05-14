@@ -28,28 +28,52 @@ import java.util.Scanner;
 
 
 /**TODO
- * InputAlphabet rework
- * Laufmodus und Stepmodus
- * Zeigen des aktuellen Zustandes der TM,
- * a) das korrekte Ergebnis,
- * b) die Angabe des aktuellen Zustandes der TM,
- * c) das Band mit mind. 15 Elementen vor und nach dem Lese-/Schreibkopf,
- * d) die aktuelle Position des Lese-/Schreibkopfes und
- * e) ein Zähler, der die Anzahl der bisher durchgeführten Berechnungsschritte angibt.
- * Clean Code rework
+ * InputAlphabet rework if needed
+ * Das korrekte Ergebnis? Eventuell nochmal überprüfen und Unärcodierung Abfrage machen für Quadratzahlen simulation.
+ * Die Eingabe vom Input Wort kann als Binärzeichenreihe eingegeben oder oder aus einer Datei eingelesen werden. Order Parser für Die Eingabeparamter mit einer Dezimahlzahl? was ist damit gemeint?
  */
 
 public class Main {
+    private static final Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Please enter a Gödel number:");
-        String godelNumber = scanner.nextLine();
-        TuringMachineBuilder builder = new TuringMachineBuilder(godelNumber);
-        try {
-           TuringMachine turingMachine = builder.build();
-             turingMachine.run();
-        } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
+        boolean continueRunning = true;
+        TuringMachine turingMachine;
+
+        System.out.println("Welcome to the Turing Machine Simulator!");
+
+        while (continueRunning) {
+            System.out.println("Please enter a Gödel number:");
+
+            String godelNumber = scanner.nextLine();
+            TuringMachineBuilder builder = new TuringMachineBuilder(godelNumber);
+            try {
+                turingMachine = builder.build();
+            } catch (IllegalArgumentException e) {
+                System.err.println(e.getMessage());
+                continue;
+            }
+
+            boolean isRunningMode = getUserConfirmation("Do you want to activate Running mode?");
+            try {
+                turingMachine.run(isRunningMode);
+            } catch (InterruptedException e) {
+                System.err.println("An error occurred while running the Turing Machine.");
+            }
+
+            continueRunning = getUserConfirmation("Do you want to create a new Turing Machine?");
         }
+
+    }
+
+    private static boolean getUserConfirmation(String message) {
+        String input;
+        do {
+            System.out.print(message + " [y/n]: ");
+            input = scanner.nextLine().trim().toLowerCase();
+            if (input.isEmpty()) {
+                return true; // default is 'y'
+            }
+        } while (!input.equals("y") && !input.equals("n"));
+        return input.equals("y");
     }
 }

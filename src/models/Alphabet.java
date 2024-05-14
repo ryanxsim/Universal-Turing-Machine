@@ -6,7 +6,7 @@ public class Alphabet {
     private final static int MAX_ADDITIONAL_SYMBOLS = 26;
 
     private final Map<String, Character> alphabet;
-    private int initialSymbolCount;
+    private final int initialSymbolCount;
 
     public Alphabet(Map<String, Character> alphabet){
         this.alphabet = alphabet;
