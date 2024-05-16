@@ -54,7 +54,7 @@ public class TuringMachineBuilder {
     }
 
     private Alphabet buildTapeAlphabet(List<String> transitionsInputs) {
-        var tapeAlphabet = AlphabetBuilder.buildAlphabet(AlphabetBuilder.Kind.TAPE);
+        var tapeAlphabet = AlphabetBuilder.buildAlphabet();
 
         transitionsInputs.stream().map(s -> s.split(PARAMETER_SEPARATOR))
                 .map(params -> params[OUTPUT_SYMBOL_POS])

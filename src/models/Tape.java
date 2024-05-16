@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 public class Tape {
     private static final char BLANK_SYMBOL = '_';
+    public static final int TAPE_HEAD_OFFSET = 15;
 
     private final List<Character> tape;
     private int currentPosition;
@@ -44,11 +45,11 @@ public class Tape {
     }
 
     public void displayTape() {
-        int tapeStart = Math.max(0, currentPosition - 15);
-        int tapeEnd = Math.min(tape.size(), currentPosition + 15);
+        int tapeStart = Math.max(0, currentPosition - TAPE_HEAD_OFFSET);
+        int tapeEnd = Math.min(tape.size(), currentPosition + TAPE_HEAD_OFFSET);
 
         // If there are fewer than 15 elements before the current position, fill the remaining spaces with '_'
-        for (int i = currentPosition - 15; i < tapeStart; i++) {
+        for (int i = currentPosition - TAPE_HEAD_OFFSET; i < tapeStart; i++) {
             System.out.print(" _ ");
         }
 
@@ -62,7 +63,7 @@ public class Tape {
         }
 
         // If there are fewer than 15 elements after the current position, fill the remaining spaces with '_'
-        for (int i = tapeEnd; i < currentPosition + 16; i++) {
+        for (int i = tapeEnd; i < currentPosition + TAPE_HEAD_OFFSET + 1; i++) {
             System.out.print(" _ ");
         }
 
