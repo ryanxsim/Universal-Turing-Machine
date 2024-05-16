@@ -46,25 +46,24 @@ public class Tape {
 
     public void displayTape() {
         int tapeStart = Math.max(0, currentPosition - TAPE_HEAD_OFFSET);
-        int tapeEnd = Math.min(tape.size(), currentPosition + TAPE_HEAD_OFFSET);
+        int tapeEnd = Math.max(tape.size(), currentPosition + TAPE_HEAD_OFFSET);
 
-        // If there are fewer than 15 elements before the current position, fill the remaining spaces with '_'
+        // If there are fewer than TAPE_HEAD_OFFSET elements before the current position, fill the remaining spaces with '_'
         for (int i = currentPosition - TAPE_HEAD_OFFSET; i < tapeStart; i++) {
             System.out.print(" _ ");
         }
 
-        // Display 15 elements before and after the current position
+        // Display TAPE_HEAD_OFFSET elements before and after the current position
         for (int i = tapeStart; i < tapeEnd; i++) {
-            if (i == currentPosition) {
-                System.out.print("[" + tape.get(i) + "]");
+            if (i < tape.size()) {
+                if (i == currentPosition) {
+                    System.out.print("[" + tape.get(i) + "]");
+                } else {
+                    System.out.print(" " + tape.get(i) + " ");
+                }
             } else {
-                System.out.print(" " + tape.get(i) + " ");
+                System.out.print(" _ ");
             }
-        }
-
-        // If there are fewer than 15 elements after the current position, fill the remaining spaces with '_'
-        for (int i = tapeEnd; i < currentPosition + TAPE_HEAD_OFFSET + 1; i++) {
-            System.out.print(" _ ");
         }
 
         System.out.println();
